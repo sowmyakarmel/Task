@@ -1,0 +1,72 @@
+</body>
+<form method="post">
+
+<table border="7">
+<tr>
+<td>ID</td>
+<td>NAME</td>
+<td>SKILL</td>
+<td colspan="2" align="center">ACTION</td>
+</tr>
+
+
+<%
+try
+{
+Class.forName("com.mysql.jdbc.Driver");
+String url="jdbc:mysql://localhost/test";
+String username="root";
+String password="root";
+String query="select * from jsp1";
+
+Connection conn=DriverManager.getConnection(url,username,password);
+Statement stmt=conn.createStatement();
+
+
+ResultSet rs=stmt.executeQuery(query);
+while(rs.next())
+{
+
+%>
+    <tr>
+    <td><%=rs.getInt("ID") %></td>
+    <td><input type="text" value="<%=rs.getString("NAME") %>"></td>
+    <td><input type="text" value="<%=rs.getString("SKILL") %>"></td>
+    <td><input type="button" name="UPDATE" value="UPDATE" onclick="
+    <% 
+    String qmod="update jsp1 set NAME=?,SKILL=? where ID=? ";
+    PreparedStatement pstmt=conn.prepareStatement(qmod);
+    String one=request.getParameter("NAME");
+    String two=request.getParameter("SKILL");
+    String three=request.getParameter("ID");
+    pstmt.setString(1,one);
+    pstmt.setString(2,two);
+    pstmt.setString(3,three);
+    pstmt.executeUpdate(); 
+    %>"></td>
+    <td> <input type="button" name="DELETE" value="DELETE"></td>
+    </tr>
+        <%
+
+}
+%>
+    </table>
+    <%
+    rs.close();
+    stmt.close();
+    conn.close();
+    }
+    catch(Exception e)
+    {
+        e.printStackTrace();
+        }
+
+
+
+
+
+
+%>
+
+</form>
+</html>
